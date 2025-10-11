@@ -2,15 +2,19 @@ import "dotenv/config";
 import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import passport from "passport";
+import "dotenv/config";
 import { Env } from "./config/env.config";
 import { HTTPSTATUS } from "./config/http.config";
 import { error } from "console";
 import { errorHandler } from "./middlewares/errorHandler.middleware";
 import { BadRequestException } from "./utils/app-error";
 import { asyncHandler } from "./middlewares/asyncHandler.middlerware";
-
+import connctDatabase from "./config/database.config";
+import dotenv from "dotenv";
+import authRoutes from "./routes/auth.routes";
 const app = express();
 const BASE_PATH = Env.BASE_PATH;
+dotenv.config();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -33,17 +37,18 @@ app.get(
     });
   })
 );
-
-
+app.use(`${BASE_PATH}/auth`,authRoutes);
 app.use(errorHandler)
 
 app.listen(Env.PORT, async () => {
   
-
+  await connctDatabase();
   if (Env.NODE_ENV === "development") {
     // await initializeCrons();
   }
 
   console.log(`Server is running on port ${Env.PORT} in ${Env.NODE_ENV} mode`);
 });
+
+
 

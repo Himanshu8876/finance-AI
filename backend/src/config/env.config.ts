@@ -5,7 +5,7 @@ const envConfig = () => ({
 
   PORT: getEnv("PORT", "8000"),
   BASE_PATH: getEnv("BASE_PATH", "/api"),
-  // MONGO_URI: getEnv("MONGO_URI"),
+  MONGO_URI: getEnv("MONGO_URI","mongodb+srv://garghimanshu778_db_user:vh9Icv6ZFccNV9r0@cluster0.bmriwtt.mongodb.net/finance_api_db?retryWrites=true&w=majority"),
 
   JWT_SECRET: getEnv("JWT_SECRET", "secert_jwt"),
   JWT_EXPIRES_IN: getEnv("JWT_EXPIRES_IN", "15m") as string,
