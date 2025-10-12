@@ -12,6 +12,8 @@ import { asyncHandler } from "./middlewares/asyncHandler.middlerware";
 import connctDatabase from "./config/database.config";
 import dotenv from "dotenv";
 import authRoutes from "./routes/auth.routes";
+import userRoutes from "./routes/user.route";
+import { passportAuthenticateJwt } from "./config/passport.config";
 const app = express();
 const BASE_PATH = Env.BASE_PATH;
 dotenv.config();
@@ -38,6 +40,7 @@ app.get(
   })
 );
 app.use(`${BASE_PATH}/auth`,authRoutes);
+app.use(`${BASE_PATH}/user`,passportAuthenticateJwt,userRoutes);
 app.use(errorHandler)
 
 app.listen(Env.PORT, async () => {
