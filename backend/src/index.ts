@@ -17,6 +17,7 @@ import { passportAuthenticateJwt } from "./config/passport.config";
 import transactionRoutes from "./routes/transaction.route";
 import { initializeCrons } from "./cron";
 import reportRoutes from "./routes/report.route";
+import analyticsRoutes from "./routes/analytics.route";
 const app = express();
 const BASE_PATH = Env.BASE_PATH;
 dotenv.config();
@@ -46,6 +47,7 @@ app.use(`${BASE_PATH}/auth`,authRoutes);
 app.use(`${BASE_PATH}/user`,passportAuthenticateJwt,userRoutes);
 app.use(`${BASE_PATH}/transaction`,passportAuthenticateJwt,transactionRoutes);
 app.use(`${BASE_PATH}/report`,passportAuthenticateJwt,reportRoutes);
+app.use(`${BASE_PATH}/analytics`,passportAuthenticateJwt,analyticsRoutes);
 app.use(errorHandler)
 
 app.listen(Env.PORT, async () => {
