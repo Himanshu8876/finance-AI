@@ -50,11 +50,11 @@ export const reportInsightPrompt = ({
   const categoryList = Object.entries(categories)
     .map(
       ([name, { amount, percentage }]) =>
-        `- ${name}: ${amount} (${percentage}%)`
+        `- ${name}: $${amount.toFixed(2)} (${(percentage * 100).toFixed(0)}%)`
     )
     .join("\n");
 
-  console.log(categoryList, "category list");
+  // console.log(categoryList, "category list"); // Removed log from the return string
 
   return `
   You are a friendly and smart financial coach, not a robot.
@@ -67,28 +67,23 @@ Each insight should reflect the actual data and sound like something a smart mon
 - Total Income: $${totalIncome.toFixed(2)}
 - Total Expenses: $${totalExpenses.toFixed(2)}
 - Available Balance: $${availableBalance.toFixed(2)}
-- Savings Rate: ${savingsRate}%
+- Savings Rate: ${savingsRate.toFixed(0)}%
 
 Top Expense Categories:
 ${categoryList}
 
 📌 Guidelines:
-- Keep each insight to one short, realistic, personalized, natural sentence
-- Use conversational language, correct wordings & Avoid sounding robotic, or generic
-- Include specific data when helpful and comma to amount
-- Be encouraging if user spent less than they earned
+- Keep each insight to one short, realistic, personalized, natural sentence.
+- Use conversational language, correct wordings, and avoid sounding robotic or generic.
+- Include specific data (like amounts and percentages) when helpful.
+- **Always** use comma formatting for dollar amounts (e.g., $1,500.00).
+- Be encouraging if the user spent less than they earned.
+- Focus on practical, next-step advice if the balance is negative.
 - Format your response **exactly** like this:
 
 ["Insight 1", "Insight 2", "Insight 3"]
 
-✅ Example:
-[
-   "Nice! You kept $7,458 after expenses — that’s solid breathing room.",
-   "You spent the most on 'Meals' this period — 32%. Maybe worth keeping an eye on.",
-   "You stayed under budget this time. That's a win — keep the momentum"
-]
-
-⚠️ Output only a **JSON array of 3 strings**. Do not include any explanation, markdown, or notes.
+⚠️ Output only a **single, plain JSON array of 3 strings**. Do not use markdown tags (like \`\`\`json), explanations, or notes.
   
   `.trim();
 };

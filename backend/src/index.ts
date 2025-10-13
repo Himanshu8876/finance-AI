@@ -11,11 +11,12 @@ import { BadRequestException } from "./utils/app-error";
 import { asyncHandler } from "./middlewares/asyncHandler.middlerware";
 import connctDatabase from "./config/database.config";
 import dotenv from "dotenv";
-import authRoutes from "./routes/auth.routes";
+import authRoutes from "./routes/auth.route";
 import userRoutes from "./routes/user.route";
 import { passportAuthenticateJwt } from "./config/passport.config";
 import transactionRoutes from "./routes/transaction.route";
-
+import { initializeCrons } from "./cron";
+import reportRoutes from "./routes/report.route";
 const app = express();
 const BASE_PATH = Env.BASE_PATH;
 dotenv.config();
@@ -44,13 +45,14 @@ app.get(
 app.use(`${BASE_PATH}/auth`,authRoutes);
 app.use(`${BASE_PATH}/user`,passportAuthenticateJwt,userRoutes);
 app.use(`${BASE_PATH}/transaction`,passportAuthenticateJwt,transactionRoutes);
+app.use(`${BASE_PATH}/report`,passportAuthenticateJwt,reportRoutes);
 app.use(errorHandler)
 
 app.listen(Env.PORT, async () => {
   
   await connctDatabase();
   if (Env.NODE_ENV === "development") {
-    // await initializeCrons();
+    await initializeCrons();
   }
 
   console.log(`Server is running on port ${Env.PORT} in ${Env.NODE_ENV} mode`);
