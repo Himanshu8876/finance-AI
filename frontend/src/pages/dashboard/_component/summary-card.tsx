@@ -27,7 +27,7 @@ interface SummaryCardProps {
 }
 
 const getCardStatus = (
-  value: number, 
+  value: number,
   cardType: CardType,
   expenseRatio?: number
 ): CardStatus => {
@@ -118,7 +118,6 @@ const getCardStatus = (
   };
 };
 
-
 const getTrendDirection = (value: number, cardType: CardType) => {
   if (cardType === "expenses") {
     // For expenses, lower is better
@@ -166,7 +165,6 @@ const SummaryCard: FC<SummaryCardProps> = ({
     );
   }
 
-  // This was recently updated
   const formatCountupValue = (val: number) => {
     return isPercentageValue
       ? formatPercentage(val, { decimalPlaces: 1 })
@@ -175,6 +173,7 @@ const SummaryCard: FC<SummaryCardProps> = ({
           showSign: cardType === "balance" && val < 0,
         });
   };
+
   return (
     <Card className="!border-none !border-0 !gap-0 !bg-white/5">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 !pb-5">
@@ -212,7 +211,7 @@ const SummaryCard: FC<SummaryCardProps> = ({
                 </span>
               )}
             </div>
-          ) : dateRange?.value ===DateRangeEnum.ALL_TIME  ? (
+          ) : dateRange?.value === DateRangeEnum.ALL_TIME ? (
             <span className="text-gray-400">Showing {dateRange?.label}</span>
           ) : value === 0 || status.label ? (
             <div className="flex items-center gap-1.5">
@@ -225,7 +224,7 @@ const SummaryCard: FC<SummaryCardProps> = ({
                 <span className="text-gray-400">• {dateRange?.label}</span>
               )}
             </div>
-          ): showTrend ? (
+          ) : showTrend ? (
             <div className="flex items-center gap-1.5">
               {percentageChange !== 0 && (
                 <div

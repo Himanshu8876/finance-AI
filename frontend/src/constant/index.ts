@@ -57,7 +57,7 @@ export type _TransactionType = keyof typeof _TRANSACTION_TYPE
 export const _TRANSACTION_STATUS = {
   PENDING: "PENDING",
   COMPLETED: "COMPLETED",
-  FAILED: "FAILED"
+  FAILED: "FAILED",
 } as const
 
 export type TransactionStatusType = keyof typeof _TRANSACTION_STATUS

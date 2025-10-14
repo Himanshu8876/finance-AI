@@ -40,12 +40,15 @@ export const reportColumns: ColumnDef<ReportType>[] = [
         [_REPORT_STATUS.PENDING]: "bg-yellow-100 text-yellow-800",
         [_REPORT_STATUS.PROCESSING]: "bg-blue-100 text-blue-800",
       };
-      
-      const style = statusStyles[status as ReportStatusType] || "bg-gray-100 text-gray-800";
-      
+
+      const style =
+        statusStyles[status as ReportStatusType] || "bg-gray-100 text-gray-800";
+
       return (
-        <span className={`inline-flex items-center rounded-full
-         px-2.5 py-0.5 text-xs font-medium ${style}`}>
+        <span
+          className={`inline-flex items-center rounded-full
+         px-2.5 py-0.5 text-xs font-medium ${style}`}
+        >
           {status}
         </span>
       );
@@ -74,5 +77,5 @@ export const reportColumns: ColumnDef<ReportType>[] = [
   {
     id: "-",
     header: "",
-  }
+  },
 ];

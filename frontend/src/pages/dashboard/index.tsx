@@ -8,21 +8,24 @@ import { useState } from "react";
 import { DateRangeType } from "@/components/date-range-select";
 
 const Dashboard = () => {
-    const [dateRange, _setDateRange] = useState<DateRangeType>(null);
+  const [dateRange, _setDateRange] = useState<DateRangeType>(null);
 
-    
-
- 
   return (
     <div className="w-full flex flex-col">
       {/* Dashboard Summary Overview */}
-      <PageLayout className="space-y-6"
-          renderPageHeader={<DashboardSummary dateRange={dateRange} setDateRange={_setDateRange} />}
+      <PageLayout
+        className="space-y-6"
+        renderPageHeader={
+          <DashboardSummary
+            dateRange={dateRange}
+            setDateRange={_setDateRange}
+          />
+        }
       >
         {/* Dashboard Main Section */}
         <div className="w-full grid grid-cols-1 lg:grid-cols-6 gap-8">
           <div className="lg:col-span-4">
-            <DashboardDataChart dateRange={dateRange}/>
+            <DashboardDataChart dateRange={dateRange} />
           </div>
           <div className="lg:col-span-2">
             <ExpensePieChart dateRange={dateRange} />

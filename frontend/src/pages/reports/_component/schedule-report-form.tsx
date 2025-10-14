@@ -20,7 +20,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import {useTypedSelector } from "@/app/hook";
+import { useAppDispatch, useTypedSelector } from "@/app/hook";
+import { useUpdateReportSettingMutation } from "@/features/report/reportAPI";
+import { updateCredentials } from "@/features/auth/authSlice";
+import { toast } from "sonner";
+import { useEffect } from "react";
 
 const formSchema = z.object({
   email: z.string(),
@@ -30,37 +34,49 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-const ScheduleReportForm = ({onCloseDrawer}: {onCloseDrawer: () => void}) => {
-  //const dispatch = useAppDispatch();
-  const {user,reportSetting} = useTypedSelector((state) => state. auth);
+const ScheduleReportForm = ({
+  onCloseDrawer,
+}: {
+  onCloseDrawer: () => void;
+}) => {
+  const dispatch = useAppDispatch();
+  const { user, reportSetting } = useTypedSelector((state) => state.auth);
 
-  // const [updateReportSetting,{isLoading}] = useUpdateReportSettingMutation();
+  const [updateReportSetting, { isLoading }] = useUpdateReportSettingMutation();
 
-  const isLoading = false
-  
   // Initialize the form
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: user?.email || "",
-      isEnabled: reportSetting?.isEnabled || true,
-      frequency:  reportSetting?.frequency || "MONTHLY",
+      email: "",
+      isEnabled: true,
+      frequency: "MONTHLY",
     },
   });
 
+  useEffect(() => {
+    if (user && reportSetting) {
+      form.reset({
+        email: user?.email,
+        isEnabled: reportSetting?.isEnabled,
+        frequency: reportSetting?.frequency,
+      });
+    }
+  }, [user, form, reportSetting]);
+
   // Handle form submission
   const onSubmit = (values: FormValues) => {
-    const payload = {isEnabled: values.isEnabled}
-    console.log("Form submitted:", payload);
-    onCloseDrawer();
-    // updateReportSetting(payload).unwrap().then(() => {
-    //   dispatch(updateCredentials({reportSetting: payload}))
-    //   onCloseDrawer();
-    //   toast.success("Report setting updated successfully");
-    // }).catch((error) => {
-    //   toast.error(error.data.message || "Failed to update report setting");
-    // })
-
+    const payload = { isEnabled: values.isEnabled };
+    updateReportSetting(payload)
+      .unwrap()
+      .then(() => {
+        dispatch(updateCredentials({ reportSetting: payload }));
+        onCloseDrawer();
+        toast.success("Report setting updated successfully");
+      })
+      .catch((error) => {
+        toast.error(error.data.message || "Failed to update report setting");
+      });
   };
 
   // Get summary text based on form values
@@ -88,7 +104,9 @@ const ScheduleReportForm = ({onCloseDrawer}: {onCloseDrawer: () => void}) => {
                   <div className="space-y-0.5">
                     <FormLabel className="text-base">Monthly Reports</FormLabel>
                     <p className="text-sm text-muted-foreground">
-                    {form.watch("isEnabled") ? "Reports activated" : "Reports deactivated"}
+                      {form.watch("isEnabled")
+                        ? "Reports activated"
+                        : "Reports deactivated"}
                     </p>
                   </div>
                   <FormControl>
@@ -157,26 +175,25 @@ const ScheduleReportForm = ({onCloseDrawer}: {onCloseDrawer: () => void}) => {
               )}
             </div>
 
-              {/* Schedule Summary */}
-              <div className="bg-muted p-4 rounded-lg">
-                <h3 className="font-medium mb-2">Schedule Summary</h3>
-                <p className="text-sm text-muted-foreground">
-                  {getScheduleSummary()}
-                </p>
-              </div>
+            {/* Schedule Summary */}
+            <div className="bg-muted p-4 rounded-lg">
+              <h3 className="font-medium mb-2">Schedule Summary</h3>
+              <p className="text-sm text-muted-foreground">
+                {getScheduleSummary()}
+              </p>
+            </div>
 
-
-             {/* Submit Button */}
-             <div className="sticky bottom-0 py-2 z-50">
-                <Button
-                  type="submit"
-                  disabled={isLoading}
-                  className="w-full text-white"
-                >
-                  {isLoading && <Loader className="h-4 w-4 animate-spin" />}
-                  Save changes
-                </Button>
-              </div>
+            {/* Submit Button */}
+            <div className="sticky bottom-0 py-2 z-50">
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="w-full text-white"
+              >
+                {isLoading && <Loader className="h-4 w-4 animate-spin" />}
+                Save changes
+              </Button>
+            </div>
           </div>
         </form>
       </Form>
