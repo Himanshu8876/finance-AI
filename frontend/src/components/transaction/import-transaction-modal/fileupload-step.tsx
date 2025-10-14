@@ -76,6 +76,8 @@ const FileUploadStep = ({ onFileUpload }: FileUploadStepProps) => {
 
           doneProgress();
 
+          console.log(columns, results.data);
+
           setTimeout(() => {
             onFileUpload(file, columns, results.data);
           }, 500);
@@ -148,4 +150,4 @@ const FileUploadStep = ({ onFileUpload }: FileUploadStepProps) => {
   );
 };
 
-export default FileUploadStep;
+export default FileUploadStep

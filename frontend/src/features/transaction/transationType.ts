@@ -51,7 +51,7 @@ export interface TransactionType {
 
 export interface GetAllTransactionResponse {
   message: string;
-  transactions: TransactionType[];
+  transations: TransactionType[];
   pagination: {
     pageSize: number;
     pageNumber: number;
@@ -79,14 +79,13 @@ export interface AIScanReceiptResponse {
 
 export interface GetSingleTransactionResponse {
   message: string;
-  data: TransactionType;
+  transaction: TransactionType;
 }
 
 export interface UpdateTransactionPayload {
   id: string;
   transaction: CreateTransactionBody;
 }
-
 
 export interface BulkTransactionType {
   title: string;

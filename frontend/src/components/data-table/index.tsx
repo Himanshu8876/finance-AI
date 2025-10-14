@@ -4,7 +4,6 @@ import {
   ColumnDef,
   getCoreRowModel,
   getFilteredRowModel,
-  //getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
   flexRender,
@@ -111,9 +110,6 @@ export function DataTable<TData>({
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    // getPaginationRowModel: isShowPagination
-    // ? getPaginationRowModel()
-    // : undefined,
   });
 
   const selectedRows = table.getFilteredSelectedRowModel().rows;

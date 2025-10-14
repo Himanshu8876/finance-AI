@@ -29,11 +29,10 @@ app.use(passport.initialize());
 
 app.use(
   cors({
-    origin: Env.FRONTEND_ORIGIN,
-    credentials: true,
+    origin: "http://localhost:5173", 
+    credentials: true,              
   })
 );
-
 app.get(
   "/",
   asyncHandler(async (req: Request, res: Response, next: NextFunction) => {

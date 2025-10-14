@@ -17,18 +17,18 @@ interface UseProgressLoaderReturn {
 export function useProgressLoader(
   options: UseProgressLoaderOptions = {}
 ): UseProgressLoaderReturn {
-  const {
-    initialProgress = 10,
-    completionDelay = 500,
-  } = options;
+  const { initialProgress = 10, completionDelay = 500 } = options;
 
   const [progress, setProgress] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const startProgress = useCallback((initial = initialProgress) => {
-    setProgress(Math.min(Math.max(initial, 0), 100));
-    setIsLoading(true);
-  }, [initialProgress]);
+  const startProgress = useCallback(
+    (initial = initialProgress) => {
+      setProgress(Math.min(Math.max(initial, 0), 100));
+      setIsLoading(true);
+    },
+    [initialProgress]
+  );
 
   const updateProgress = useCallback((value: number) => {
     setProgress(Math.min(Math.max(value, 0), 100));
