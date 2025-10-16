@@ -23,6 +23,8 @@ const envConfig = () => ({
   RESEND_MAILER_SENDER: getEnv("RESEND_MAILER_SENDER", "onboarding@resend.dev"),
 
   FRONTEND_ORIGIN: getEnv("FRONTEND_ORIGIN", "localhost"),
+  GOOGLE_CLIENT_ID: getEnv("GOOGLE_CLIENT_ID","56213459650-a01f8ako1fvaa4n7tb106kp5vvo0smk0.apps.googleusercontent.com"),
+  GOOGLE_CLIENT_SECRET: getEnv("GOOGLE_CLIENT_SECRET","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"),
 });
 
 export const Env = envConfig();
