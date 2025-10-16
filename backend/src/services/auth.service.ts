@@ -10,20 +10,19 @@ import ReportSettingModel, {
 } from "../models/report-setting.model";
 import { calulateNextReportDate } from "../utils/helper";
 import { signJwtToken } from "../utils/jwt";
-export const registerService = async (body: RegisterSchemaType) => {
-  const { email } = body;
+import { sendWelcomeEmail } from "../mailers/Welcomemail.mailer"; 
 
+export const registerService = async (body: RegisterSchemaType) => {
+  const { email, name } = body;
   const session = await mongoose.startSession();
+  let newUser: any = null;
 
   try {
     await session.withTransaction(async () => {
       const existingUser = await UserModel.findOne({ email }).session(session);
       if (existingUser) throw new UnauthorizedException("User already exists");
 
-      const newUser = new UserModel({
-        ...body,
-      });
-
+      newUser = new UserModel({ ...body });
       await newUser.save({ session });
 
       const reportSetting = new ReportSettingModel({
@@ -33,17 +32,28 @@ export const registerService = async (body: RegisterSchemaType) => {
         nextReportDate: calulateNextReportDate(),
         lastSentDate: null,
       });
-     await reportSetting.save({ session });
-
-      return { user: newUser.omitPassword() };
+      await reportSetting.save({ session });
     });
+
+    // ✅ Send welcome email AFTER successful transaction
+    if (newUser && newUser.email && newUser.name) {
+      try {
+        await sendWelcomeEmail({ to: newUser.email, name: newUser.name });
+        console.log(`✅ Welcome email sent to ${newUser.email}`);
+      } catch (emailError) {
+        console.error(`⚠️ Failed to send welcome email:`, emailError);
+        // Don’t throw, as registration should still succeed
+      }
+    }
+
+    return { user: newUser?.omitPassword() };
+
   } catch (error) {
     throw error;
   } finally {
     await session.endSession();
   }
 };
-
 
 export const loginService = async (body: LoginSchemaType) => {
   const { email, password } = body;
