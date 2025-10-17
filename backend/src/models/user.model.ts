@@ -4,7 +4,8 @@ import { compareValue, hashValue } from "../utils/bcrypt";
 export interface UserDocument extends Document {
   name: string;
   email: string;
-  password: string;
+  password?: string;
+  provider: "local" | "google";
   profilePicture: string | null;
   createdAt: Date;
   updatedAt: Date;
@@ -26,6 +27,12 @@ const userSchema = new Schema<UserDocument>(
       trim: true,
       lowercase: true,
     },
+    provider: {
+      type: String,
+      enum: ["local", "google"],
+      default: "local",
+      required: true,
+    },
     profilePicture: {
       type: String,
       default: null,
@@ -33,7 +40,10 @@ const userSchema = new Schema<UserDocument>(
     password: {
       type: String,
       select: true,
-      required: true,
+      // only required for local provider
+      required: function (this: any) {
+        return this.provider === "local";
+      },
     },
   },
   {
@@ -41,11 +51,10 @@ const userSchema = new Schema<UserDocument>(
   }
 );
 
+// Hash password if modified and exists
 userSchema.pre("save", async function (next) {
-  if (this.isModified("password")) {
-    if (this.password) {
-      this.password = await hashValue(this.password);
-    }
+  if (this.isModified("password") && this.password) {
+    this.password = await hashValue(this.password);
   }
   next();
 });
@@ -57,6 +66,7 @@ userSchema.methods.omitPassword = function (): Omit<UserDocument, "password"> {
 };
 
 userSchema.methods.comparePassword = async function (password: string) {
+  if (!this.password) return false; // for google users
   return compareValue(password, this.password);
 };
 

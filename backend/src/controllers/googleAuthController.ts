@@ -3,6 +3,7 @@ import { OAuth2Client } from "google-auth-library";
 import UserModel from "../models/user.model";
 import { signJwtToken } from "../utils/jwt";
 import { Env } from "../config/env.config";
+import { sendWelcomeEmail } from "../mailers/Welcomemail.mailer";
 
 const client = new OAuth2Client(Env.GOOGLE_CLIENT_ID);
 
@@ -11,11 +12,9 @@ export const googleAuthController = async (req: Request, res: Response) => {
     const { id_token } = req.body;
 
     if (!id_token) {
-      return res.status(400).json({ message: "ID token missing" });
+      return res.status(400).json({ message: "Google ID token is required" });
     }
 
-    // This method verifies the signature, checks the audience, and crucially, 
-    // checks the 'exp' (expiration) claim of the ID token.
     const ticket = await client.verifyIdToken({
       idToken: id_token,
       audience: Env.GOOGLE_CLIENT_ID,
@@ -28,33 +27,41 @@ export const googleAuthController = async (req: Request, res: Response) => {
 
     const { email, name, picture } = payload;
 
-    // ✅ Check if user already exists
     let user = await UserModel.findOne({ email });
+    let isNewUser = false;
 
-    // ✅ Create new user if not exists
+    // If user doesn’t exist → create and send welcome email
     if (!user) {
+      isNewUser = true;
       user = new UserModel({
         name,
         email,
-        password: "", // Not needed for Google-auth users
-        profilePicture: picture,
+        provider: "google",
+        profilePicture: picture || null,
       });
       await user.save();
+
+      try {
+        await sendWelcomeEmail({ to: user.email, name: user.name });
+      } catch (emailError) {
+        console.error("Failed to send welcome email:", emailError);
+        // Don’t block signup if email fails
+      }
     }
 
     // ✅ Create JWT for your app
     const { token, expiresAt } = signJwtToken({ userId: user.id });
 
     return res.status(200).json({
-      message: "Google login successful",
+      message: isNewUser
+        ? "Google signup successful"
+        : "Google login successful",
       token,
       expiresAt,
       user: user.omitPassword(),
     });
   } catch (error) {
     console.error("Google auth error:", error);
-    // The error 'Invalid token signature' is being thrown right here, 
-    // indicating the token is either expired or tampered with.
-    return res.status(500).json({ message: "Google login failed" });
+    return res.status(500).json({ message: "Google authentication failed" });
   }
 };
