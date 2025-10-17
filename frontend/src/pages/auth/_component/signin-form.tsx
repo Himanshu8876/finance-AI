@@ -20,6 +20,7 @@ import { Loader, Eye, EyeOff } from "lucide-react";
 import { useLoginMutation } from "@/features/auth/authAPI";
 import { useAppDispatch } from "@/app/hook";
 import { setCredentials } from "@/features/auth/authSlice";
+import { GoogleAuthButton } from "./GoogleAuthButton";
 
 const schema = z.object({
   email: z.string().email("Invalid email address"),
@@ -136,7 +137,7 @@ const SignInForm = ({
           </div>
 
           {/* GitHub Login Button */}
-          <Button type="button" variant="outline" className="w-full">
+          {/* <Button type="button" variant="outline" className="w-full">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
               <path
                 d="M12 .297c-6.63 0-12 5.373-12 12 
@@ -162,7 +163,8 @@ const SignInForm = ({
               />
             </svg>
             Login with GitHub
-          </Button>
+          </Button> */}
+          <GoogleAuthButton/>
         </div>
 
         {/* Footer */}
