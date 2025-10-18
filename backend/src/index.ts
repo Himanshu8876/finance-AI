@@ -29,7 +29,7 @@ app.use(passport.initialize());
 
 app.use(
   cors({
-    origin: "http://localhost:5173", 
+    origin: "https://curious-sunflower-e63115.netlify.app/", 
     credentials: true,              
   })
 );
