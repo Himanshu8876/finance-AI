@@ -131,7 +131,6 @@ const TransactionForm = (props: {
   }, [editData, form, isEdit, transactionId]);
 
   const frequencyOptions = Object.entries(_TRANSACTION_FREQUENCY).map(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     ([_, value]) => ({
       value: value,
       label: value.replace("_", " ").toLowerCase(),
@@ -154,10 +153,7 @@ const TransactionForm = (props: {
     });
   };
 
-  // Handle form submission
   const onSubmit = (values: FormValues) => {
-    // if (isCreating || isUpdating) return;
-    console.log("Form submitted:", values);
     const payload = {
       title: values.title,
       type: values.type,
@@ -169,6 +165,7 @@ const TransactionForm = (props: {
       isRecurring: values.isRecurring || false,
       recurringInterval: values.frequency || null,
     };
+
     if (isEdit && transactionId) {
       updateTransaction({ id: transactionId, transaction: payload })
         .unwrap()
@@ -181,6 +178,7 @@ const TransactionForm = (props: {
         });
       return;
     }
+
     createTransaction(payload)
       .unwrap()
       .then(() => {
@@ -194,11 +192,10 @@ const TransactionForm = (props: {
   };
 
   return (
-    <div className="relative pb-10 pt-5 px-2.5">
+    <div className="relative pb-16 pt-5 px-2.5 h-full overflow-y-auto">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 px-4">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 px-4 pb-16">
           <div className="space-y-6">
-            {/* Receipt Upload Section */}
             {!isEdit && (
               <RecieptScanner
                 loadingChange={isScanning}
@@ -223,10 +220,7 @@ const TransactionForm = (props: {
                     <label
                       htmlFor={_TRANSACTION_TYPE.INCOME}
                       className={cn(
-                        `text-sm font-normal leading-none cursor-pointer
-                        flex items-center space-x-2 rounded-md 
-                        shadow-sm border p-2 flex-1 justify-center 
-                        `,
+                        `text-sm font-normal cursor-pointer flex items-center space-x-2 rounded-md shadow-sm border p-2 flex-1 justify-center`,
                         field.value === _TRANSACTION_TYPE.INCOME &&
                           "!border-primary"
                       )}
@@ -242,10 +236,7 @@ const TransactionForm = (props: {
                     <label
                       htmlFor={_TRANSACTION_TYPE.EXPENSE}
                       className={cn(
-                        `text-sm font-normal leading-none cursor-pointer
-                        flex items-center space-x-2 rounded-md 
-                        shadow-sm border p-2 flex-1 justify-center 
-                        `,
+                        `text-sm font-normal cursor-pointer flex items-center space-x-2 rounded-md shadow-sm border p-2 flex-1 justify-center`,
                         field.value === _TRANSACTION_TYPE.EXPENSE &&
                           "!border-primary"
                       )}
@@ -269,7 +260,7 @@ const TransactionForm = (props: {
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="!font-normal">Title</FormLabel>
+                  <FormLabel>Title</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="Transaction title"
@@ -290,15 +281,13 @@ const TransactionForm = (props: {
                 <FormItem>
                   <FormLabel>Amount</FormLabel>
                   <FormControl>
-                    <div className="relative">
-                      <CurrencyInputField
-                        {...field}
-                        disabled={isScanning}
-                        onValueChange={(value) => field.onChange(value || "")}
-                        placeholder="₹0.00"
-                        prefix="₹"
-                      />
-                    </div>
+                    <CurrencyInputField
+                      {...field}
+                      disabled={isScanning}
+                      onValueChange={(value) => field.onChange(value || "")}
+                      placeholder="₹0.00"
+                      prefix="₹"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -315,9 +304,9 @@ const TransactionForm = (props: {
                   <SingleSelector
                     value={
                       CATEGORIES.find((opt) => opt.value === field.value) ||
-                      field.value
+                      (field.value
                         ? { value: field.value, label: field.value }
-                        : undefined
+                        : undefined)
                     }
                     onChange={(option) => field.onChange(option.value)}
                     options={CATEGORIES}
@@ -330,7 +319,7 @@ const TransactionForm = (props: {
               )}
             />
 
-            {/* Date */}
+            {/* ✅ Fixed Date Picker */}
             <FormField
               control={form.control}
               name="date"
@@ -341,7 +330,7 @@ const TransactionForm = (props: {
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
-                          variant={"outline"}
+                          variant="outline"
                           className={cn(
                             "w-full pl-3 text-left font-normal",
                             !field.value && "text-muted-foreground"
@@ -364,8 +353,7 @@ const TransactionForm = (props: {
                         mode="single"
                         selected={field.value}
                         onSelect={(date) => {
-                          console.log(date);
-                          field.onChange(date); // This updates the form value
+                          if (date) field.onChange(date);
                         }}
                         disabled={(date) => date < new Date("2023-01-01")}
                         initialFocus
@@ -407,19 +395,18 @@ const TransactionForm = (props: {
               )}
             />
 
+            {/* Recurring Switch */}
             <FormField
               control={form.control}
               name="isRecurring"
               render={({ field }) => (
                 <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                   <div className="space-y-0.5">
-                    <FormLabel className="text-[14.5px]">
-                      Recurring Transaction
-                    </FormLabel>
+                    <FormLabel>Recurring Transaction</FormLabel>
                     <p className="text-xs text-muted-foreground">
                       {field.value
                         ? "This will repeat automatically"
-                        : "Set recurring to repeat this transaction"}
+                        : "Enable to repeat this transaction"}
                     </p>
                   </div>
                   <FormControl>
@@ -429,14 +416,10 @@ const TransactionForm = (props: {
                       className="cursor-pointer"
                       onCheckedChange={(checked) => {
                         field.onChange(checked);
-                        if (checked) {
-                          form.setValue(
-                            "frequency",
-                            _TRANSACTION_FREQUENCY.DAILY
-                          );
-                        } else {
-                          form.setValue("frequency", null);
-                        }
+                        form.setValue(
+                          "frequency",
+                          checked ? _TRANSACTION_FREQUENCY.DAILY : null
+                        );
                       }}
                     />
                   </FormControl>
@@ -444,12 +427,13 @@ const TransactionForm = (props: {
               )}
             />
 
-            {form.watch("isRecurring") && form.getValues().isRecurring && (
+            {/* Frequency Selector */}
+            {form.watch("isRecurring") && (
               <FormField
                 control={form.control}
                 name="frequency"
                 render={({ field }) => (
-                  <FormItem className="recurring-control">
+                  <FormItem>
                     <FormLabel>Frequency</FormLabel>
                     <Select
                       onValueChange={field.onChange}
@@ -458,19 +442,12 @@ const TransactionForm = (props: {
                     >
                       <FormControl className="w-full">
                         <SelectTrigger>
-                          <SelectValue
-                            placeholder="Select frequency"
-                            className="!capitalize"
-                          />
+                          <SelectValue placeholder="Select frequency" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
                         {frequencyOptions.map(({ value, label }) => (
-                          <SelectItem
-                            key={value}
-                            value={value}
-                            className="!capitalize"
-                          >
+                          <SelectItem key={value} value={value}>
                             {label}
                           </SelectItem>
                         ))}
@@ -481,6 +458,7 @@ const TransactionForm = (props: {
                 )}
               />
             )}
+
             {/* Description */}
             <FormField
               control={form.control}
@@ -502,6 +480,7 @@ const TransactionForm = (props: {
             />
           </div>
 
+          {/* Sticky Submit Button */}
           <div className="sticky bottom-0 bg-white dark:bg-background pb-2">
             <Button
               type="submit"
@@ -509,14 +488,14 @@ const TransactionForm = (props: {
               disabled={isScanning || isCreating || isUpdating}
             >
               {isCreating || isUpdating ? (
-                <Loader className="h-4 w-4 animate-spin" />
+                <Loader className="h-4 w-4 animate-spin mr-2" />
               ) : null}
               {isEdit ? "Update" : "Save"}
             </Button>
           </div>
 
           {isLoading && (
-            <div className="absolute top-0 left-0 right-0 bottom-0 bg-white/70 dark:bg-background/70 z-50 flex justify-center">
+            <div className="absolute top-0 left-0 right-0 bottom-0 bg-white/70 dark:bg-background/70 z-50 flex justify-center items-center">
               <Loader className="h-8 w-8 animate-spin" />
             </div>
           )}
@@ -526,4 +505,4 @@ const TransactionForm = (props: {
   );
 };
 
-export default TransactionForm
+export default TransactionForm;

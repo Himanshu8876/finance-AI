@@ -1,5 +1,11 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@layer utilities {
+  .ios-scroll {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+}
 
 body {
   pointer-events: fill !important;
