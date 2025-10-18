@@ -28,8 +28,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
 
 const allowedOrigins = [
-  "http://localhost:5173", // local frontend
-  "https://coruscating-starship-3f021c.netlify.app", // production frontend
+  "http://localhost:5173", 
+  "https://soft-crumble-208df2.netlify.app",
 ];
 
 // CORS middleware
@@ -78,3 +78,4 @@ app.listen(Env.PORT, async () => {
 
 
 
+// cdfvdfvdxvxdvxcvxcvxcvxcvxcvxcvxfgdfbgdfhbv xvx
