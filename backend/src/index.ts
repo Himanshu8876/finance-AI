@@ -27,12 +27,24 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(passport.initialize());
 
+const allowedOrigins = [
+  "https://gregarious-dragon-d19047.netlify.app",
+  "http://localhost:5173", 
+];
+
 app.use(
   cors({
-    origin: "https://curious-sunflower-e63115.netlify.app/", 
-    credentials: true,              
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
   })
 );
+
 app.get(
   "/",
   asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
