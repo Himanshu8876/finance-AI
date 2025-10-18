@@ -29,7 +29,7 @@ app.use(passport.initialize());
 
 const allowedOrigins = [
   "http://localhost:5173", // local frontend
-  "https://darling-nougat-ac72a8.netlify.app", // production frontend
+  "https://coruscating-starship-3f021c.netlify.app", // production frontend
 ];
 
 // CORS middleware
