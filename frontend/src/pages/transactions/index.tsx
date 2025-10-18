@@ -8,7 +8,6 @@ import TransactionTable from "@/components/transaction/transaction-table";
 import ImportTransactionModal from "@/components/transaction/import-transaction-modal";
 
 export default function Transactions() {
-
   return (
     <PageLayout
       title="All Transactions"
@@ -21,11 +20,14 @@ export default function Transactions() {
         </div>
       }
     >
-      <Card className="border-0 shadow-none">
-        <CardContent className="pt-2">
-          <TransactionTable pageSize={20} />
-        </CardContent>
-      </Card>
+      {/* Scrollable wrapper */}
+      <div className="overflow-y-auto max-h-[calc(100vh-80px)] md:max-h-full">
+        <Card className="border-0 shadow-none">
+          <CardContent className="pt-2">
+            <TransactionTable pageSize={20} />
+          </CardContent>
+        </Card>
+      </div>
     </PageLayout>
   );
 }
