@@ -28,20 +28,25 @@ app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
 
 const allowedOrigins = [
-  "https://dulcet-khapse-3e2fe3.netlify.app/",
-  "http://localhost:5173", 
+  "http://localhost:5173", // local frontend
+  "https://dulcet-khapse-3e2fe3.netlify.app", // production frontend
 ];
 
+// CORS middleware
 app.use(
   cors({
     origin: (origin, callback) => {
+      // Allow requests with no origin (like Postman) or allowed origins
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
+        console.log("Blocked by CORS:", origin); // helpful for debugging
         callback(new Error("Not allowed by CORS"));
       }
     },
-    credentials: true,
+    credentials: true, // needed if you use cookies or authentication
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
