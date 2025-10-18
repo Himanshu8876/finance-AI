@@ -28,7 +28,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
 
 const allowedOrigins = [
-  "https://gregarious-dragon-d19047.netlify.app",
+  "https://dulcet-khapse-3e2fe3.netlify.app/",
   "http://localhost:5173", 
 ];
 
