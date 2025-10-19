@@ -29,7 +29,7 @@ app.use(passport.initialize());
 
 const allowedOrigins = [
   "http://localhost:5173", 
-  "https://mellifluous-toffee-2d8894.netlify.app",
+  "https://storied-manatee-ffd288.netlify.app",
 ];
 
 // CORS middleware
