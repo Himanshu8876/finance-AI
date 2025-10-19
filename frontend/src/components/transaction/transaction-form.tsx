@@ -312,14 +312,19 @@ const TransactionForm = (props: {
                     placeholder="Select or type a category"
                     creatable
                     disabled={isScanning}
+                    inputProps={{
+                      readOnly: true,
+                      inputMode: "none",
+                    }}
                   />
                   <FormMessage />
                 </FormItem>
               )}
             />
 
+
             {/* ✅ Fixed Date Picker */}
-            <FormField
+             <FormField
               control={form.control}
               name="date"
               render={({ field }) => (
@@ -329,6 +334,7 @@ const TransactionForm = (props: {
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
+                          type="button"
                           variant="outline"
                           className={cn(
                             "w-full pl-3 text-left font-normal",
@@ -345,17 +351,18 @@ const TransactionForm = (props: {
                       </FormControl>
                     </PopoverTrigger>
                     <PopoverContent
-                      className="w-auto p-0 !pointer-events-auto"
+                      side="bottom"
                       align="start"
+                      className="w-auto p-0 z-[9999]"
+                      sideOffset={4}
+                      onOpenAutoFocus={(e) => e.preventDefault()} // prevent scroll jump
                     >
                       <CalendarComponent
                         mode="single"
                         selected={field.value}
-                        onSelect={(date) => {
-                          if (date) field.onChange(date);
-                        }}
+                        onSelect={(date) => date && field.onChange(date)}
                         disabled={(date) => date < new Date("2023-01-01")}
-                        initialFocus
+                        initialFocus={false}
                       />
                     </PopoverContent>
                   </Popover>
@@ -363,6 +370,7 @@ const TransactionForm = (props: {
                 </FormItem>
               )}
             />
+
 
             {/* Payment Method */}
             <FormField
