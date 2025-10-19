@@ -27,7 +27,7 @@ const AddTransactionDrawer = () => {
       </DrawerTrigger>
 
       {/* ✅ Fixed DrawerContent */}
-      <DrawerContent className="max-w-md h-[100dvh] overflow-y-auto ios-scroll">
+      <DrawerContent className="overflow-y-auto overflow-x-hidden ios-scroll">
         <DrawerHeader className="relative">
           <div>
             <DrawerTitle className="text-xl font-semibold">

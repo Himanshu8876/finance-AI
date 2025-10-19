@@ -191,7 +191,7 @@ const TransactionForm = (props: {
   };
 
   return (
-    <div className="relative pb-16 pt-5 px-2.5 h-full overflow-y-auto">
+    <div className="relative pb-16 pt-5 px-2.5 overflow-x-hidden">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 px-4 pb-16">
           <div className="space-y-6">
