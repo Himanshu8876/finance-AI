@@ -6,7 +6,7 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link, useNavigate } from "react-router-dom";
-import { AUTH_ROUTES } from "@/routes/common/routePath";
+import { AUTH_ROUTES , PROTECTED_ROUTES } from "@/routes/common/routePath";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -24,17 +24,10 @@ const schema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
-
 type FormValues = z.infer<typeof schema>;
 
 const SignUpForm = () => {
-   React.useEffect(() => {
-    console.log("=== SIGNUP FORM DEBUG INFO ===");
-    console.log("VITE_API_URL:", import.meta.env.VITE_API_URL);
-    console.log("VITE_GOOGLE_CLIENT_ID:", import.meta.env.VITE_GOOGLE_CLIENT_ID);
-    console.log("Client ID exists:", !!import.meta.env.VITE_GOOGLE_CLIENT_ID);
-    console.log("========================");
-  }, []);
+   
   const navigate = useNavigate();
   const [register, { isLoading }] = useRegisterMutation();
   const [showPassword, setShowPassword] = useState(false);
@@ -151,7 +144,13 @@ const SignUpForm = () => {
           </div>
 
          
-          <GoogleAuthButton/>
+          <GoogleAuthButton
+  onSuccess={(data) => {
+    toast.success("Login successful");
+    navigate(PROTECTED_ROUTES.OVERVIEW);
+  }}
+/>
+
         </div>
 
         {/* Footer */}
