@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Loader, Eye, EyeOff } from "lucide-react";
@@ -145,7 +145,7 @@ const SignUpForm = () => {
 
          
           <GoogleAuthButton
-  onSuccess={(data) => {
+  onSuccess={() => {
     toast.success("Login successful");
     navigate(PROTECTED_ROUTES.OVERVIEW);
   }}

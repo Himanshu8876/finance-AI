@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { useDispatch } from "react-redux";
