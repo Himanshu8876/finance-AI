@@ -47,6 +47,7 @@ import {
   useUpdateTransactionMutation,
 } from "@/features/transaction/transactionAPI";
 import { toast } from "sonner";
+
 const formSchema = z.object({
   title: z.string().min(2, { message: "Title must be at least 2 characters." }),
   amount: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
@@ -190,6 +191,8 @@ const TransactionForm = (props: {
       });
   };
 
+  const transactionType = form.watch("type");
+
   return (
     <div className="relative pb-16 pt-5 px-2.5 overflow-x-hidden">
       <Form {...form}>
@@ -219,33 +222,43 @@ const TransactionForm = (props: {
                     <label
                       htmlFor={_TRANSACTION_TYPE.INCOME}
                       className={cn(
-                        `text-sm font-normal cursor-pointer flex items-center space-x-2 rounded-md shadow-sm border p-2 flex-1 justify-center`,
-                        field.value === _TRANSACTION_TYPE.INCOME &&
-                          "!border-primary"
+                        `text-sm font-normal cursor-pointer flex items-center space-x-2 rounded-md shadow-sm border p-2 flex-1 justify-center transition-all duration-200`,
+                        field.value === _TRANSACTION_TYPE.INCOME
+                          ? "border-green-500 bg-green-50 dark:bg-green-950/20 text-green-700 dark:text-green-300 shadow-sm"
+                          : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300"
                       )}
                     >
                       <RadioGroupItem
                         value={_TRANSACTION_TYPE.INCOME}
                         id={_TRANSACTION_TYPE.INCOME}
-                        className="!border-primary"
+                        className={cn(
+                          "border-gray-300 dark:border-gray-600",
+                          field.value === _TRANSACTION_TYPE.INCOME && 
+                          "!border-green-500 text-green-600 dark:text-green-400"
+                        )}
                       />
-                      Income
+                      <span className="font-medium">Income</span>
                     </label>
 
                     <label
                       htmlFor={_TRANSACTION_TYPE.EXPENSE}
                       className={cn(
-                        `text-sm font-normal cursor-pointer flex items-center space-x-2 rounded-md shadow-sm border p-2 flex-1 justify-center`,
-                        field.value === _TRANSACTION_TYPE.EXPENSE &&
-                          "!border-primary"
+                        `text-sm font-normal cursor-pointer flex items-center space-x-2 rounded-md shadow-sm border p-2 flex-1 justify-center transition-all duration-200`,
+                        field.value === _TRANSACTION_TYPE.EXPENSE
+                          ? "border-red-500 bg-red-50 dark:bg-red-950/20 text-red-700 dark:text-red-300 shadow-sm"
+                          : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300"
                       )}
                     >
                       <RadioGroupItem
                         value={_TRANSACTION_TYPE.EXPENSE}
                         id={_TRANSACTION_TYPE.EXPENSE}
-                        className="!border-primary"
+                        className={cn(
+                          "border-gray-300 dark:border-gray-600",
+                          field.value === _TRANSACTION_TYPE.EXPENSE && 
+                          "!border-red-500 text-red-600 dark:text-red-400"
+                        )}
                       />
-                      Expense
+                      <span className="font-medium">Expense</span>
                     </label>
                   </RadioGroup>
                   <FormMessage />
@@ -265,6 +278,13 @@ const TransactionForm = (props: {
                       placeholder="Transaction title"
                       {...field}
                       disabled={isScanning}
+                      className={cn(
+                        "transition-colors duration-200",
+                        transactionType === _TRANSACTION_TYPE.INCOME && 
+                        "border-green-300 focus-visible:ring-green-500 focus-visible:border-green-500",
+                        transactionType === _TRANSACTION_TYPE.EXPENSE && 
+                        "border-red-300 focus-visible:ring-red-500 focus-visible:border-red-500"
+                      )}
                     />
                   </FormControl>
                   <FormMessage />
@@ -286,6 +306,13 @@ const TransactionForm = (props: {
                       onValueChange={(value) => field.onChange(value || "")}
                       placeholder="₹0.00"
                       prefix="₹"
+                      className={cn(
+                        "transition-colors duration-200",
+                        transactionType === _TRANSACTION_TYPE.INCOME && 
+                        "border-green-300 focus-visible:ring-green-500 focus-visible:border-green-500",
+                        transactionType === _TRANSACTION_TYPE.EXPENSE && 
+                        "border-red-300 focus-visible:ring-red-500 focus-visible:border-red-500"
+                      )}
                     />
                   </FormControl>
                   <FormMessage />
@@ -316,15 +343,21 @@ const TransactionForm = (props: {
                       readOnly: true,
                       inputMode: "none",
                     }}
+                    className={cn(
+                      "transition-colors duration-200",
+                      transactionType === _TRANSACTION_TYPE.INCOME && 
+                      "border-green-300 focus-within:ring-green-500 focus-within:border-green-500",
+                      transactionType === _TRANSACTION_TYPE.EXPENSE && 
+                      "border-red-300 focus-within:ring-red-500 focus-within:border-red-500"
+                    )}
                   />
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-
-            {/* ✅ Fixed Date Picker */}
-             <FormField
+            {/* Date Picker */}
+            <FormField
               control={form.control}
               name="date"
               render={({ field }) => (
@@ -337,8 +370,12 @@ const TransactionForm = (props: {
                           type="button"
                           variant="outline"
                           className={cn(
-                            "w-full pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground"
+                            "w-full pl-3 text-left font-normal transition-colors duration-200",
+                            !field.value && "text-muted-foreground",
+                            transactionType === _TRANSACTION_TYPE.INCOME && 
+                            "border-green-300 hover:border-green-400",
+                            transactionType === _TRANSACTION_TYPE.EXPENSE && 
+                            "border-red-300 hover:border-red-400"
                           )}
                         >
                           {field.value ? (
@@ -355,7 +392,7 @@ const TransactionForm = (props: {
                       align="start"
                       className="w-auto p-0 z-[9999]"
                       sideOffset={4}
-                      onOpenAutoFocus={(e) => e.preventDefault()} // prevent scroll jump
+                      onOpenAutoFocus={(e) => e.preventDefault()}
                     >
                       <CalendarComponent
                         mode="single"
@@ -371,7 +408,6 @@ const TransactionForm = (props: {
               )}
             />
 
-
             {/* Payment Method */}
             <FormField
               control={form.control}
@@ -385,7 +421,13 @@ const TransactionForm = (props: {
                     disabled={isScanning}
                   >
                     <FormControl className="w-full">
-                      <SelectTrigger>
+                      <SelectTrigger className={cn(
+                        "transition-colors duration-200",
+                        transactionType === _TRANSACTION_TYPE.INCOME && 
+                        "border-green-300 focus:ring-green-500 focus:border-green-500",
+                        transactionType === _TRANSACTION_TYPE.EXPENSE && 
+                        "border-red-300 focus:ring-red-500 focus:border-red-500"
+                      )}>
                         <SelectValue placeholder="Select payment method" />
                       </SelectTrigger>
                     </FormControl>
@@ -407,7 +449,13 @@ const TransactionForm = (props: {
               control={form.control}
               name="isRecurring"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                <FormItem className={cn(
+                  "flex flex-row items-center justify-between rounded-lg border p-4 transition-colors duration-200",
+                  transactionType === _TRANSACTION_TYPE.INCOME && 
+                  "border-green-200 bg-green-50/50 dark:bg-green-950/10",
+                  transactionType === _TRANSACTION_TYPE.EXPENSE && 
+                  "border-red-200 bg-red-50/50 dark:bg-red-950/10"
+                )}>
                   <div className="space-y-0.5">
                     <FormLabel>Recurring Transaction</FormLabel>
                     <p className="text-xs text-muted-foreground">
@@ -420,7 +468,13 @@ const TransactionForm = (props: {
                     <Switch
                       disabled={isScanning}
                       checked={field.value}
-                      className="cursor-pointer"
+                      className={cn(
+                        "cursor-pointer transition-colors duration-200",
+                        transactionType === _TRANSACTION_TYPE.INCOME && 
+                        "data-[state=checked]:bg-green-500",
+                        transactionType === _TRANSACTION_TYPE.EXPENSE && 
+                        "data-[state=checked]:bg-red-500"
+                      )}
                       onCheckedChange={(checked) => {
                         field.onChange(checked);
                         form.setValue(
@@ -448,7 +502,13 @@ const TransactionForm = (props: {
                       disabled={isScanning}
                     >
                       <FormControl className="w-full">
-                        <SelectTrigger>
+                        <SelectTrigger className={cn(
+                          "transition-colors duration-200",
+                          transactionType === _TRANSACTION_TYPE.INCOME && 
+                          "border-green-300 focus:ring-green-500 focus:border-green-500",
+                          transactionType === _TRANSACTION_TYPE.EXPENSE && 
+                          "border-red-300 focus:ring-red-500 focus:border-red-500"
+                        )}>
                           <SelectValue placeholder="Select frequency" />
                         </SelectTrigger>
                       </FormControl>
@@ -476,7 +536,13 @@ const TransactionForm = (props: {
                   <FormControl>
                     <Textarea
                       placeholder="Add notes about this transaction"
-                      className="resize-none"
+                      className={cn(
+                        "resize-none transition-colors duration-200",
+                        transactionType === _TRANSACTION_TYPE.INCOME && 
+                        "border-green-300 focus-visible:ring-green-500 focus-visible:border-green-500",
+                        transactionType === _TRANSACTION_TYPE.EXPENSE && 
+                        "border-red-300 focus-visible:ring-red-500 focus-visible:border-red-500"
+                      )}
                       disabled={isScanning}
                       {...field}
                     />
@@ -491,7 +557,13 @@ const TransactionForm = (props: {
           <div className="sticky bottom-0 bg-white dark:bg-background pb-2">
             <Button
               type="submit"
-              className="w-full !text-white"
+              className={cn(
+                "w-full !text-white transition-all duration-200 font-medium",
+                transactionType === _TRANSACTION_TYPE.INCOME && 
+                "bg-green-600 hover:bg-green-700",
+                transactionType === _TRANSACTION_TYPE.EXPENSE && 
+                "bg-red-600 hover:bg-red-700"
+              )}
               disabled={isScanning || isCreating || isUpdating}
             >
               {isCreating || isUpdating ? (
