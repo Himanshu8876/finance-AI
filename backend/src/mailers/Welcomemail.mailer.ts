@@ -154,9 +154,8 @@ The MyFinance Team
             <li><span>🏦</span>Make informed decisions backed by real-time analytics</li>
           </ul>
 
-          <div class="button-container">
-            <a href="[YOUR_LOGIN_URL]" class="button">Access MyFinance Dashboard</a>
-          </div>
+          < div class = "button-container" > < a href = "https://glistening-treacle-01ae42.netlify.app" class = "button" target = "_blank" rel = "noopener noreferrer" > Access MyFinance Dashboard < / a > < / div >
+
 
           <p>If you have any questions, simply reply to  email — garghimanshu778@gmail.com.</p>
           <p>Warm regards,<br><strong>The MyFinance Team</strong></p>

@@ -72,8 +72,6 @@ export const updateReportSettingService = async (
     }
   }
 
-  console.log(nextReportDate, "nextReportDate");
-
   existingReportSetting.set({
     ...body,
     nextReportDate,
@@ -166,8 +164,6 @@ export const generateReportService = async (
     totalExpenses = 0,
     categories = [],
   } = results[0] || {};
-
-  console.log(results[0], "results");
 
   const byCategory = categories.reduce(
     (acc: any, { _id, total }: any) => {

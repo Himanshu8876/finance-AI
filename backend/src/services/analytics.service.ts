@@ -125,8 +125,6 @@ export const summaryAnalyticsService = async (
     },
   } = current || {};
 
-  console.log(current, "current");
-
   let percentageChange: any = {
     income: 0,
     expenses: 0,

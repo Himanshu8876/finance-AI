@@ -138,7 +138,7 @@ const SignInForm = ({
 
          
           <GoogleAuthButton
-      onSuccess={() => {
+       onSuccess={() => {
     toast.success("Login successful");
     navigate(PROTECTED_ROUTES.OVERVIEW);
   }}

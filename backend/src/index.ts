@@ -29,22 +29,20 @@ app.use(passport.initialize());
 
 const allowedOrigins = [
   "http://localhost:5173", 
-  "https://eloquent-daffodil-b2c48a.netlify.app",
+  "https://glistening-treacle-01ae42.netlify.app",
 ];
 
-// CORS middleware
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests with no origin (like Postman) or allowed origins
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
-        console.log("Blocked by CORS:", origin); // helpful for debugging
+        console.log("Blocked by CORS:", origin); 
         callback(new Error("Not allowed by CORS"));
       }
     },
-    credentials: true, // needed if you use cookies or authentication
+    credentials: true, 
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })

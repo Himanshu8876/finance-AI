@@ -2,14 +2,11 @@ import { useState } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { setCredentials } from "../../../features/auth/authSlice"; // adjust path
+import { setCredentials } from "../../../features/auth/authSlice";
 import { toast } from "sonner";
 
 interface GoogleAuthButtonProps {
-  /**
-   * Callback fired after successful login
-   * Receives server response (user data & token)
-   */
+  /** Callback fired after successful login */
   onSuccess?: (data: any) => void;
 }
 
@@ -23,20 +20,22 @@ export const GoogleAuthButton = ({ onSuccess }: GoogleAuthButtonProps) => {
 
     try {
       const id_token = credentialResponse?.credential;
-
       if (!id_token) {
         toast.error("No ID token received from Google");
         setLoading(false);
         return;
       }
 
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/auth/google`, {
-        id_token,
-      });
+      // ✅ Important: include credentials for cookies
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/auth/google`,
+        { id_token },
+        { withCredentials: true }
+      );
 
       const data = res.data;
 
-      // Update Redux state
+      // ✅ Update Redux store immediately
       dispatch(
         setCredentials({
           accessToken: data.token,
@@ -51,9 +50,11 @@ export const GoogleAuthButton = ({ onSuccess }: GoogleAuthButtonProps) => {
         })
       );
 
-      // Call parent callback for toast/redirect
-      onSuccess?.(data);
-
+      // ✅ Wait a short moment to ensure cookies/state sync
+      setTimeout(() => {
+        toast.success("Google login successful!");
+        onSuccess?.(data); // navigate after Redux + toast
+      }, 400);
     } catch (error: any) {
       console.error("Google login error:", error);
       toast.error(error.response?.data?.message || "Failed to sign in with Google");
@@ -75,6 +76,8 @@ export const GoogleAuthButton = ({ onSuccess }: GoogleAuthButtonProps) => {
         text="continue_with"
         shape="rectangular"
         size="large"
+        theme="outline"
+        width="100%"
       />
     </div>
   );
