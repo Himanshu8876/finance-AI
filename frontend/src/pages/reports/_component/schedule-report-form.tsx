@@ -55,14 +55,15 @@ const ScheduleReportForm = ({
   });
 
   useEffect(() => {
-    if (user && reportSetting) {
-      form.reset({
-        email: user?.email,
-        isEnabled: reportSetting?.isEnabled,
-        frequency: reportSetting?.frequency,
-      });
-    }
-  }, [user, form, reportSetting]);
+  if (user) {
+    form.reset({
+      email: user.email || "",
+      isEnabled: reportSetting?.isEnabled ?? true,
+      frequency: reportSetting?.frequency ?? "MONTHLY",
+    });
+  }
+}, [user, form, reportSetting]);
+
 
   // Handle form submission
   const onSubmit = (values: FormValues) => {

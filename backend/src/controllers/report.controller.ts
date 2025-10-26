@@ -28,10 +28,18 @@ export const getAllReportsController = asyncHandler(
 
 export const updateReportSettingController = asyncHandler(
   async (req: Request, res: Response) => {
-    const userId = req.user?._id;
     const body = updateReportSettingSchema.parse(req.body);
 
-    await updateReportSettingService(userId, body);
+    // Use userId if exists, otherwise fallback to email
+    const userIdentifier = req.user?._id || req.user?.email;
+
+    if (!userIdentifier) {
+      return res.status(HTTPSTATUS.BAD_REQUEST).json({
+        message: "User information missing",
+      });
+    }
+
+    await updateReportSettingService(userIdentifier, body);
 
     return res.status(HTTPSTATUS.OK).json({
       message: "Reports setting updated successfully",

@@ -12,6 +12,7 @@ import { format } from "date-fns";
 import { genAI, genAIModel } from "../config/google-ai.config";
 import { createUserContent } from "@google/genai";
 import { reportInsightPrompt } from "../utils/prompt";
+import UserModel from "../models/user.model";
 
 export const getAllReportsService = async (
   userId: string,
@@ -45,20 +46,36 @@ export const getAllReportsService = async (
 };
 
 export const updateReportSettingService = async (
-  userId: string,
+  userIdOrEmail: string,
   body: UpdateReportSettingType
 ) => {
   const { isEnabled } = body;
   let nextReportDate: Date | null = null;
 
-  const existingReportSetting = await ReportSettingModel.findOne({
-    userId,
-  });
-  if (!existingReportSetting)
-    throw new NotFoundException("Report setting not found");
+  // First, try to find user by ID
+  let user = await UserModel.findById(userIdOrEmail);
+  // If not found by ID, try finding by email (for Google login users)
+  if (!user) {
+    user = await UserModel.findOne({ email: userIdOrEmail });
+  }
 
-  //   const frequency =
-  //     existingReportSetting.frequency || ReportFrequencyEnum.MONTHLY;
+  if (!user) throw new NotFoundException("User not found");
+
+  // Find the report setting using the correct user._id
+  let existingReportSetting = await ReportSettingModel.findOne({
+    userId: user._id,
+  });
+
+  // Create a default report setting if not found
+  if (!existingReportSetting) {
+    existingReportSetting = await ReportSettingModel.create({
+      userId: user._id,
+      isEnabled: false,
+      frequency: "MONTHLY",
+      lastSentDate: null,
+      nextReportDate: null,
+    });
+  }
 
   if (isEnabled) {
     const currentNextReportDate = existingReportSetting.nextReportDate;
@@ -78,7 +95,10 @@ export const updateReportSettingService = async (
   });
 
   await existingReportSetting.save();
+
+  return existingReportSetting; // optional, return updated object
 };
+
 
 export const generateReportService = async (
   userId: string,
