@@ -30,7 +30,6 @@ export const updateReportSettingController = asyncHandler(
   async (req: Request, res: Response) => {
     const body = updateReportSettingSchema.parse(req.body);
 
-    // Use userId if exists, otherwise fallback to email
     const userIdentifier = req.user?._id || req.user?.email;
 
     if (!userIdentifier) {
