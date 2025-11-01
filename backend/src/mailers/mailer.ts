@@ -1,5 +1,5 @@
+import nodemailer from "nodemailer";
 import { Env } from "../config/env.config";
-import { resend } from "../config/resend.config";
 
 type Params = {
   to: string | string[];
@@ -9,7 +9,17 @@ type Params = {
   from?: string;
 };
 
-const mailer_sender = `MyFinance <${Env.RESEND_MAILER_SENDER}>`;
+const mailer_sender = `MyFinance <${Env.NODEMAILER_EMAIL}>`;
+
+const transporter = nodemailer.createTransport({
+  host: Env.NODEMAILER_HOST, 
+  port: Number(Env.NODEMAILER_PORT) || 587,
+  secure: Env.MAIL_SECURE,
+  auth: {
+    user: Env.NODEMAILER_EMAIL,
+    pass: Env.NODEMAILER_PASS, 
+  },
+});
 
 export const sendEmail = async ({
   to,
@@ -18,11 +28,19 @@ export const sendEmail = async ({
   text,
   html,
 }: Params) => {
-  return await resend.emails.send({
-    from,
-    to: Array.isArray(to) ? to : [to],
-    text,
-    subject,
-    html,
-  });
+  try {
+    const info = await transporter.sendMail({
+      from,
+      to: Array.isArray(to) ? to.join(",") : to,
+      subject,
+      text,
+      html,
+    });
+
+    console.log("✅ Email sent successfully:", info.messageId);
+    return { success: true, messageId: info.messageId };
+  } catch (error) {
+    console.error("❌ Error sending email:", error);
+    return { success: false, error };
+  }
 };

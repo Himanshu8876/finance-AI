@@ -107,7 +107,7 @@ The MyFinance Team
 
         .button {
           background: linear-gradient(135deg, #0052d4, #4364f7);
-          color: #fff;
+          color: #ffffff;
           text-decoration: none;
           padding: 12px 30px;
           border-radius: 8px;
@@ -148,17 +148,36 @@ The MyFinance Team
           <p>Here’s how you can get started right away:</p>
 
           <ul class="features">
-            <li><span>💳</span>Track income, expenses, and transactions effortlessly</li>
-            <li><span>📊</span>Visualize your spending trends with insightful charts</li>
-            <li><span>💰</span>Set savings goals and monitor your growth</li>
-            <li><span>🏦</span>Make informed decisions backed by real-time analytics</li>
-          </ul>
+  <li><span>💳</span>Track income, expenses, and transactions effortlessly</li>
+  <li><span>📊</span>Visualize your spending trends with insightful charts</li>
+  <li><span>💰</span>Set savings goals and monitor your growth</li>
+  <li><span>🏦</span>Make informed decisions backed by real-time analytics</li>
+</ul>
 
-          < div class = "button-container" > < a href = "https://regal-monstera-6c3351.netlify.app" class = "button" target = "_blank" rel = "noopener noreferrer" > Access MyFinance Dashboard < / a > < / div >
+<div style="text-align: center; margin-top: 30px;">
+    <a
+      href="https://stalwart-taffy-9114c7.netlify.app"
+      target="_blank"
+      rel="noopener noreferrer"
+      style="
+        display: inline-block;
+        background: linear-gradient(90deg, #0066ff, #0047b3);
+        color: #ffffff !important;
+        padding: 14px 28px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 16px;
+        text-align: center;
+      "
+    >
+      Access MyFinance Dashboard
+  </a>
+</div>
 
+<p>If you have any questions, simply reply to email — garghimanshu778@gmail.com.</p>
+<p>Warm regards,<br><strong>The MyFinance Team</strong></p>
 
-          <p>If you have any questions, simply reply to  email — garghimanshu778@gmail.com.</p>
-          <p>Warm regards,<br><strong>The MyFinance Team</strong></p>
         </div>
 
         <div class="footer">
