@@ -156,7 +156,7 @@ The MyFinance Team
 
 <div style="text-align: center; margin-top: 30px;">
     <a
-      href="https://stalwart-taffy-9114c7.netlify.app"
+      href="https://jocular-madeleine-de937f.netlify.app"
       target="_blank"
       rel="noopener noreferrer"
       style="

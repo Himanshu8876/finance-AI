@@ -29,7 +29,7 @@ app.use(passport.initialize());
 
 const allowedOrigins = [
   "http://localhost:5173", 
-  "https://stalwart-taffy-9114c7.netlify.app",
+  "https://jocular-madeleine-de937f.netlify.app",
 ];
 
 app.use(
