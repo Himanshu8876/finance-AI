@@ -22,6 +22,13 @@ const envConfig = () => ({
   RESEND_API_KEY: getEnv("RESEND_API_KEY","re_PUVxe5Uc_3Ssaf5Vze8jKzCjqoDSRseg8"),
   RESEND_MAILER_SENDER: getEnv("RESEND_MAILER_SENDER", "onboarding@resend.dev"),
 
+  MAIL_SERVICE: getEnv("MAIL_SERVICE", "gmail"),
+  NODEMAILER_HOST: getEnv("MAIL_HOST", "smtp.gmail.com"),
+  NODEMAILER_PORT: Number(getEnv("MAIL_PORT", "465")),
+  MAIL_SECURE: getEnv("MAIL_SECURE", "true") === "true",
+  NODEMAILER_EMAIL: getEnv("NODEMAILER_EMAIL", "garghimanshu778@gmail.com"),
+  NODEMAILER_PASS: getEnv("NODEMAILER_PASS", "effh hyiv fzbq kazi"),
+
   FRONTEND_ORIGIN: getEnv("FRONTEND_ORIGIN", "localhost"),
   GOOGLE_CLIENT_ID: getEnv("GOOGLE_CLIENT_ID","56213459650-a01f8ako1fvaa4n7tb106kp5vvo0smk0.apps.googleusercontent.com"),
   GOOGLE_CLIENT_SECRET: getEnv("GOOGLE_CLIENT_SECRET","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"),
